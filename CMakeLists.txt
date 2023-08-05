@@ -1,6 +1,10 @@
 ﻿cmake_minimum_required(VERSION 3.19)
-project(flightsim LANGUAGES C CXX)
 
+# force static linkage for all dependencies
+# needs to be defined before project() is called
+set(VCPKG_TARGET_TRIPLET "x64-windows-static")
+
+project(flightsim LANGUAGES C CXX)
 set(gdextension_lib_name ${PROJECT_NAME})
 
 set(CMAKE_CXX_STANDARD 17)

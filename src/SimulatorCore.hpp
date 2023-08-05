@@ -33,7 +33,7 @@ namespace fs
     class SimulatorCore
     {
     private:
-        static const inline String OVERPASS_API_ENDPOINT_URL = "https://maps.mail.ru/osm/tools/overpass/api/interpreter";
+        const String OVERPASS_API_ENDPOINT_URL = "https://maps.mail.ru/osm/tools/overpass/api/interpreter";
 
         HTTPClient *httpClientPtr;
 
