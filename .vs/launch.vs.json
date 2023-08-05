@@ -1,0 +1,20 @@
+{
+  "version": "0.2.1",
+  "configurations": [
+    {
+      "type": "dll",
+      "isDefaultConfiguration": true,
+      "exe": "${workspaceRoot}\\godot\\engine\\bin\\godot.windows.editor.dev.x86_64.exe",
+      "args": [
+        "--editor",
+        "--windowed",
+        "--resolution 1920x1080",
+        "--single-window",
+        "--path",
+        "${workspaceRoot}\\flightsim"
+      ],
+      "project": "CMakeLists.txt",
+      "name": "flightsim gdextension"
+    }
+  ]
+}

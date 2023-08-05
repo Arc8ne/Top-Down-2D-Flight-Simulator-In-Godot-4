@@ -1,0 +1,11 @@
+[configuration]
+
+entry_symbol = "flightsim_library_init"
+compatibility_minimum = 4.1
+
+[libraries]
+
+windows.debug.x86_32 = "res://bin/flightsimd.dll"
+windows.debug.x86_64 = "res://bin/flightsimd.dll"
+windows.release.x86_64 = "res://bin/flightsim.dll"
+windows.release.x86_32 = "res://bin/flightsim.dll"

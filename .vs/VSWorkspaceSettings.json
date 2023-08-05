@@ -1,0 +1,35 @@
+{
+  "BuildIncremental": {
+    "Enabled": false
+  },
+  "ExcludedItems": [
+    ".git*",
+    ".vscode",
+    "cpp.hint",
+    "scripts/",
+    "extension_api.json",
+    "engine/**/*.md",
+    "engine/**/*.txt",
+    "engine/**/*.py",
+    "engine/**/*.png",
+    "engine/**/*.svg",
+    "engine/**/*.yml",
+    "engine/**/SConstruct",
+    "engine/**/SCsub",
+    "engine/**/.mailmap*",
+    "engine/**/.clang*",
+    "engine/**/.editorconfig",
+    "engine/**/LICENSE",
+    "!.out*",
+    "!.out/*",
+    "!.out/build/*",
+    "!.godot"
+  ],
+  "Indexing": {
+    "Enabled": true
+  },
+  "Logger": {
+    "EnableVsLogging": false,
+    "LoggingLevel": "Info"
+  }
+}
