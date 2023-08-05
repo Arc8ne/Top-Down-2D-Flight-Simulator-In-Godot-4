@@ -1,3 +1,5 @@
+#pragma once
+
 #include <thread>
 
 #include <vector>
@@ -16,28 +18,42 @@
 
 #include "PBFHelper.hpp"
 
-class SimulatorCore
+namespace fs 
 {
-private:
-	const godot::String OVERPASS_API_ENDPOINT_URL = "https://maps.mail.ru/osm/tools/overpass/api/interpreter";
+    using godot::HTTPClient;
+    using godot::Node2D;
+    using godot::PackedStringArray;
+    using godot::String;
+    using godot::TileMap;
+    using godot::UtilityFunctions;
+    using godot::Vector2;
+    using godot::Error;
+    using godot::FileAccess;
 
-	godot::HTTPClient* httpClientPtr;
+    class SimulatorCore
+    {
+    private:
+        static const inline String OVERPASS_API_ENDPOINT_URL = "https://maps.mail.ru/osm/tools/overpass/api/interpreter";
 
-	godot::PackedStringArray defaultHTTPRequestHeaders;
+        HTTPClient *httpClientPtr;
 
-	godot::String GenerateOverpassAPISingaporeLocationDataURL();
+        PackedStringArray defaultHTTPRequestHeaders;
 
-	bool HandleError(godot::Error error);
+        String GenerateOverpassAPISingaporeLocationDataURL();
 
-	void FetchOSMDataForWorldMap();
-public:
-	static SimulatorCore* instancePtr;
+        bool HandleError(Error error);
 
-	SimulatorCore();
+        void FetchOSMDataForWorldMap();
 
-	static godot::String GetBooleanAsString(bool boolean);
+    public:
+        static SimulatorCore *instancePtr;
 
-	void GenerateRandomWorld(godot::TileMap* tileMapPtr);
+        SimulatorCore();
 
-	void GenerateWorld(godot::Node2D* mainWorldRootPtr);
-};
+        static String GetBooleanAsString(bool boolean);
+
+        void GenerateRandomWorld(TileMap *tileMapPtr);
+
+        void GenerateWorld(Node2D *mainWorldRootPtr);
+    };
+}

@@ -124,7 +124,6 @@ void godot::MainFollowCamera::OnGPSCheckButtonToggled(bool isButtonPressed)
 void godot::MainFollowCamera::_bind_methods()
 {
 	godot::ClassDB::bind_method(
-		"Vector2",
 		godot::D_METHOD("get_lift"),
 		&godot::MainFollowCamera::GetLift
 	);
@@ -144,7 +143,7 @@ void godot::MainFollowCamera::_bind_methods()
 
 void godot::MainFollowCamera::_ready()
 {
-	SimulatorCore::instancePtr->GenerateWorld(
+	fs::SimulatorCore::instancePtr->GenerateWorld(
 		this->get_node<godot::Node2D>("/root/MainWorld")
 	);
 

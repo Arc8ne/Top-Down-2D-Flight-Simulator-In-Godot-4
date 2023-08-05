@@ -8,3 +8,6 @@
 	url = https://github.com/godotengine/godot-cpp.git
 	branch = 4.1
 	ignore = dirty
+[submodule "tools/vcpkg"]
+	path = tools/vcpkg
+	url = https://github.com/microsoft/vcpkg

@@ -1,9 +1,9 @@
 ﻿cmake_minimum_required(VERSION 3.19)
-project(roguelite LANGUAGES C CXX)
+project(flightsim LANGUAGES C CXX)
 
 set(gdextension_lib_name ${PROJECT_NAME})
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -50,45 +50,87 @@ if(NOT EXISTS "${CMAKE_SOURCE_DIR}/godot/engine/core")
     )
 endif()
 
+# confirm we found the godot engine source files.
+# if the sources list is empty, the submodule probably
+# hasn't been initialized or updated yet.
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/tools/vcpkg/ports")
+    message("VCPKG package manager sources not found")
+    message("initializing/updating the vcpkg submodule...")
+
+    # update the vcpkg submodule to populate it with the code necessary
+    # to grab all dependencies needed for the gdextension library build
+    execute_process(
+        COMMAND git submodule update --init tools/vcpkg
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMAND_ERROR_IS_FATAL ANY
+    )
+endif()
+
+# =======================================================================
+# VCPKG bootstrap / initialization. 
+# Only happens once, when vcpkg.exe is missing.
+# =======================================================================
+
+set(vcpkg_executable "${CMAKE_SOURCE_DIR}/tools/vcpkg/vcpkg.exe")
+
+if(NOT EXISTS "${vcpkg_executable}")
+    # bootstrap vcpkg so vcpkg.exe 
+    # is configured and installed
+    execute_process(
+        COMMAND ps -c "./tools/vcpkg/boostrap-vcpkg.bat"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        COMMAND_ERROR_IS_FATAL ANY
+    )
+
+    # fail out if vcpkg isn't found after setup
+    if(NOT EXISTS "${vcpkg_executable}")
+        message(FATAL_ERROR "ERROR: tools/vcpkg/vcpkg.exe not found!")
+    endif()
+endif()
+
 # =======================================================================
 # Godot editor/engine debug build
 # =======================================================================
 
 set(godot_debug_editor_executable "${CMAKE_SOURCE_DIR}/godot/engine/bin/godot.windows.editor.dev.x86_64.exe")
+
 if(NOT EXISTS "${godot_debug_editor_executable}")
     message("Godot engine debug binaries not found, invoking debug build of engine...")
 
+    # Run a clean to wipe out intermediate files from previous builds
     execute_process(
-        COMMAND scons --clean                       \\
-                      platform=windows              \\
-                      arch=x86_64                   \\
-                      target=editor                 \\
-                      use_static_cpp=no             \\
-                      dev_build=yes                 \\
-                      debug_symbols=yes             \\
-                      optimize=none                 \\
-                      use_lto=no
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/godot/engine"
-        COMMAND_ERROR_IS_FATAL ANY
+        COMMAND scons --clean               \\
+                        platform=windows    \\
+                        arch=x86_64         \\
+                        target=editor       \\
+                        use_static_cpp=no   \\
+                        dev_build=yes       \\
+                        debug_symbols=yes   \\
+                        optimize=none       \\
+                        use_lto=no
+                        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/godot/engine"
+                        COMMAND_ERROR_IS_FATAL ANY
     )
 
     # this build should only ever need to be run once (unless the
     # enging debug binaries are deleted or you want to change the
     # build configuration/command invoked below).
     execute_process(
-        COMMAND scons --quiet                       \\
-                      platform=windows              \\
-                      arch=x86_64                   \\
-                      target=editor                 \\
-                      use_static_cpp=no             \\
-                      dev_build=yes                 \\
-                      debug_symbols=yes             \\
-                      optimize=none                 \\
-                      use_lto=no
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/godot/engine"
-        COMMAND_ERROR_IS_FATAL ANY
+        COMMAND scons --quiet               \\
+                        platform=windows    \\
+                        arch=x86_64         \\
+                        target=editor       \\
+                        use_static_cpp=no   \\
+                        dev_build=yes       \\
+                        debug_symbols=yes   \\
+                        optimize=none       \\
+                        use_lto=no
+                        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/godot/engine"
+                        COMMAND_ERROR_IS_FATAL ANY
     )
 
+    # delete this temp scons build directory that contains a 1 line header file.
+    # it confi=uses VS2022 intellisense and leads to a bunch of code analysis errors
     file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/godot/engine/.sconf_temp")
 
     if(NOT EXISTS "${godot_debug_editor_executable}")
@@ -101,6 +143,14 @@ endif()
 # =======================================================================
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/godot/godot-cpp)
+
+# =======================================================================
+# Find all 3rd party libraries built and imported by vcpkg
+# =======================================================================
+
+find_package(ZLIB REQUIRED)
+find_path(PROTOZERO_INCLUDE_DIRS "protozero/basic_pbf_builder.hpp")
+find_path(LIBOSMIUM_INCLUDE_DIRS "osmium/area/assembler.hpp")
 
 # =======================================================================
 # Godot engine library setup/configuration.
@@ -218,10 +268,20 @@ if(MSVC)
 endif()
 
 # =======================================================================
+# Dependency include directories
+# =======================================================================
+
+target_include_directories(${gdextension_lib_name} 
+    PRIVATE ${PROTOZERO_INCLUDE_DIRS}
+    PRIVATE ${LIBOSMIUM_INCLUDE_DIRS}
+)
+
+# =======================================================================
 # Dependency linkage
 # =======================================================================
 
 # link gdextension to the cpp bindings library
 target_link_libraries(${gdextension_lib_name}
     PUBLIC godot::cpp
+    PRIVATE ZLIB::ZLIB
 )
