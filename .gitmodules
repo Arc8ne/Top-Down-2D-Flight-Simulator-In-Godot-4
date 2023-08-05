@@ -1,0 +1,13 @@
+[submodule "godot/engine"]
+	path = godot/engine
+	url = https://github.com/godotengine/godot.git
+	branch = 4.1
+	ignore = dirty
+[submodule "godot/godot-cpp"]
+	path = godot/godot-cpp
+	url = https://github.com/godotengine/godot-cpp.git
+	branch = 4.1
+	ignore = dirty
+[submodule "tools/vcpkg"]
+	path = tools/vcpkg
+	url = https://github.com/microsoft/vcpkg
