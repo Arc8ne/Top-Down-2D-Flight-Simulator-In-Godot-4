@@ -225,10 +225,3 @@ endif()
 target_link_libraries(${gdextension_lib_name}
     PUBLIC godot::cpp
 )
-
-# =======================================================================
-# Print useful configuration report
-# =======================================================================
-
-include(${CMAKE_SOURCE_DIR}/scripts/cmake/utils.cmake)
-print_project_variables()
