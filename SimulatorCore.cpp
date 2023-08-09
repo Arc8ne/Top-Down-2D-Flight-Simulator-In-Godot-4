@@ -182,12 +182,3 @@ void SimulatorCore::FetchOSMDataForWorldMap()
 		godot::UtilityFunctions::print("Data stored successfully.");
 	}
 }
-
-void SimulatorCore::GenerateWorld(godot::Node2D* mainWorldRootPtr)
-{
-	PBFHelper::PBFReader pbfReader = PBFHelper::PBFReader();
-
-	pbfReader.Read(
-		"C:/dev/godot_native_cpp_projects/Experimental_Top_Down_2D_Flight_Simulator/singapore-latest.osm.pbf"
-	);
-}

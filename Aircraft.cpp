@@ -2,12 +2,7 @@
 
 void Aircraft::_bind_methods()
 {
-    /*
-    godot::ClassDB::bind_method(
-        godot::D_METHOD("_ready"),
-        &Aircraft::_ready
-    );
-    */
+
 }
 
 void Aircraft::_ready()

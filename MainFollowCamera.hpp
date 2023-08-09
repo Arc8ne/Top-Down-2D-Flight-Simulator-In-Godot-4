@@ -32,84 +32,85 @@
 
 #include <godot_cpp/classes/check_button.hpp>
 
+#include <godot_cpp/classes/engine.hpp>
+
 #include "SimulatorCore.hpp"
 
-namespace godot
+class MainFollowCamera : public godot::Camera2D
 {
-	class MainFollowCamera : public godot::Camera2D
-	{
-		GDCLASS(MainFollowCamera, godot::Camera2D)
-	private:
-		int acceleration = 1;
+	GDCLASS(MainFollowCamera, godot::Camera2D)
+private:
+	int acceleration = 1;
 
-		int deceleration = 1;
+	int deceleration = 1;
 
-		int turnRate = 50;
+	int turnRate = 50;
 
-		int maxVelocity = 300;
+	int maxVelocity = 300;
 
-		int velocity = 0;
+	int velocity = 0;
 
-		int altitude = 0;
+	int altitude = 0;
 
-		double altitudeChangeRate = 0;
+	double altitudeChangeRate = 0;
 
-		std::map<int, bool> keyToPressedStatusMap = std::map<int, bool>();
+	std::map<int, bool> keyToPressedStatusMap = std::map<int, bool>();
 
-		godot::Sprite2D* aircraftSpritePtr = nullptr;
+	godot::Sprite2D* aircraftSpritePtr = nullptr;
 
-		godot::Sprite2D* aircraftShadowPtr = nullptr;
+	godot::Sprite2D* aircraftShadowPtr = nullptr;
 
-		godot::VBoxContainer* hudVBoxContainerPtr = nullptr;
+	godot::VBoxContainer* hudVBoxContainerPtr = nullptr;
 
-		godot::Label* airspeedLabelPtr = nullptr;
+	godot::Label* airspeedLabelPtr = nullptr;
 
-		godot::Label* altitudeLabelPtr = nullptr;
+	godot::Label* altitudeLabelPtr = nullptr;
 
-		godot::Vector2 shadowOffset = godot::Vector2(0, 0);
+	godot::Vector2 shadowOffset = godot::Vector2(0, 0);
 
-		godot::Color redColor = godot::Color(255, 0, 65, 1);
+	godot::Color redColor = godot::Color(255, 0, 65, 1);
 
-		godot::Color whiteColor = godot::Color(255, 255, 255, 1);
+	godot::Color whiteColor = godot::Color(255, 255, 255, 1);
 
-		godot::CheckButton* gpsCheckButtonPtr = nullptr;
+	godot::CheckButton* gpsCheckButtonPtr = nullptr;
 
-		int lowAltitude = 101;
+	int lowAltitude = 101;
 
-		void RegulateVelocity();
+	void RegulateVelocity();
 
-		void RegulateAltitude();
+	void RegulateAltitude();
 
-		void UpdateAirspeedLabel();
+	void UpdateAirspeedLabel();
 
-		void UpdateAltitudeLabel();
+	void UpdateAltitudeLabel();
 
-		void UpdateShadowBasedOnAltitude();
+	void UpdateShadowBasedOnAltitude();
 
-		void UpdateShadowBasedOnRotation();
+	void UpdateShadowBasedOnRotation();
 
-		void UpdateHUDBasedOnCameraZoom();
+	void UpdateHUDBasedOnCameraZoom();
 
-		godot::Vector2 GetLift();
+	godot::Vector2 GetLift();
 
-		void OnInputMouseMotion(godot::InputEventMouseMotion* inputEventMouseMotionPtr);
+	void OnInputMouseMotion(godot::InputEventMouseMotion* inputEventMouseMotionPtr);
 
-		void OnInputMouseButton(godot::InputEventMouseButton* inputEventMouseButtonPtr);
+	void OnInputMouseButton(godot::InputEventMouseButton* inputEventMouseButtonPtr);
 
-		void OnGPSCheckButtonToggled(bool isButtonPressed);
-	protected:
+	void OnGPSCheckButtonToggled(bool isButtonPressed);
+protected:
 
-	public:
-		static void _bind_methods();
+public:
+	static void _bind_methods();
 
-		MainFollowCamera() = default;
+	MainFollowCamera() = default;
 
-		~MainFollowCamera() = default;
+	~MainFollowCamera() = default;
 
-		void _ready();
+	void _ready();
 
-		void _input(godot::InputEvent* inputEventPtr);
+	void _input(godot::InputEvent* inputEventPtr);
 
-		void _physics_process(float delta);
-	};
-}
+	void _process(float delta);
+
+	void _physics_process(float delta);
+};

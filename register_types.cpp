@@ -7,13 +7,13 @@ void initialize_main_module(godot::ModuleInitializationLevel p_level)
 		return;
 	}
 
-	/*
 	godot::ClassDB::register_class<MainWorld>();
 
 	godot::ClassDB::register_class<Aircraft>();
 
-	godot::ClassDB::register_class<godot::MainFollowCamera>();
-	*/
+	godot::ClassDB::register_class<MainFollowCamera>();
+
+	godot::ClassDB::register_class<LoadingBar>();
 }
 
 void uninitialize_main_module(godot::ModuleInitializationLevel p_level)

@@ -14,8 +14,6 @@
 
 #include <godot_cpp/variant/utility_functions.hpp>
 
-#include "PBFHelper.hpp"
-
 class SimulatorCore
 {
 private:
@@ -38,6 +36,4 @@ public:
 	static godot::String GetBooleanAsString(bool boolean);
 
 	void GenerateRandomWorld(godot::TileMap* tileMapPtr);
-
-	void GenerateWorld(godot::Node2D* mainWorldRootPtr);
 };

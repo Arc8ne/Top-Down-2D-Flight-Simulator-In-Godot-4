@@ -1,6 +1,6 @@
 #include "MainFollowCamera.hpp"
 
-void godot::MainFollowCamera::RegulateVelocity()
+void MainFollowCamera::RegulateVelocity()
 {
 	if (this->velocity >= 0)
 	{
@@ -15,7 +15,7 @@ void godot::MainFollowCamera::RegulateVelocity()
 	}
 }
 
-void godot::MainFollowCamera::RegulateAltitude()
+void MainFollowCamera::RegulateAltitude()
 {
 	if (this->altitude < 0)
 	{
@@ -23,7 +23,7 @@ void godot::MainFollowCamera::RegulateAltitude()
 	}
 }
 
-void godot::MainFollowCamera::UpdateAirspeedLabel()
+void MainFollowCamera::UpdateAirspeedLabel()
 {
 	this->airspeedLabelPtr->set_text(
 		godot::String::num(this->velocity) + (godot::String)" kts"
@@ -32,7 +32,7 @@ void godot::MainFollowCamera::UpdateAirspeedLabel()
 	// godot::Godot::print("Lift: " + this->GetLift());
 }
 
-void godot::MainFollowCamera::UpdateAltitudeLabel()
+void MainFollowCamera::UpdateAltitudeLabel()
 {
 	this->altitudeLabelPtr->set_text(
 		godot::String::num(this->altitude) + (godot::String)" ft"
@@ -54,7 +54,7 @@ void godot::MainFollowCamera::UpdateAltitudeLabel()
 	}
 }
 
-void godot::MainFollowCamera::UpdateShadowBasedOnAltitude()
+void MainFollowCamera::UpdateShadowBasedOnAltitude()
 {
 	this->shadowOffset.x = this->altitude * -0.2;
 
@@ -65,14 +65,14 @@ void godot::MainFollowCamera::UpdateShadowBasedOnAltitude()
 	);
 }
 
-void godot::MainFollowCamera::UpdateShadowBasedOnRotation()
+void MainFollowCamera::UpdateShadowBasedOnRotation()
 {
 	this->aircraftShadowPtr->set_rotation(
 		this->aircraftSpritePtr->get_rotation()
 	);
 }
 
-void godot::MainFollowCamera::UpdateHUDBasedOnCameraZoom()
+void MainFollowCamera::UpdateHUDBasedOnCameraZoom()
 {
 	// return;
 
@@ -81,7 +81,7 @@ void godot::MainFollowCamera::UpdateHUDBasedOnCameraZoom()
 	);
 }
 
-godot::Vector2 godot::MainFollowCamera::GetLift()
+godot::Vector2 MainFollowCamera::GetLift()
 {
 	godot::Vector2 lift = godot::Vector2(0, 0);
 
@@ -90,12 +90,12 @@ godot::Vector2 godot::MainFollowCamera::GetLift()
 	return lift;
 }
 
-void godot::MainFollowCamera::OnInputMouseMotion(godot::InputEventMouseMotion* inputEventMouseMotionPtr)
+void MainFollowCamera::OnInputMouseMotion(godot::InputEventMouseMotion* inputEventMouseMotionPtr)
 {
 
 }
 
-void godot::MainFollowCamera::OnInputMouseButton(godot::InputEventMouseButton* inputEventMouseButtonPtr)
+void MainFollowCamera::OnInputMouseButton(godot::InputEventMouseButton* inputEventMouseButtonPtr)
 {
 	if (inputEventMouseButtonPtr->is_pressed() == true)
 	{
@@ -116,74 +116,72 @@ void godot::MainFollowCamera::OnInputMouseButton(godot::InputEventMouseButton* i
 	}
 }
 
-void godot::MainFollowCamera::OnGPSCheckButtonToggled(bool isButtonPressed)
+void MainFollowCamera::OnGPSCheckButtonToggled(bool isButtonPressed)
 {
 
 }
 
-void godot::MainFollowCamera::_bind_methods()
+void MainFollowCamera::_bind_methods()
 {
 	godot::ClassDB::bind_method(
-		"Vector2",
 		godot::D_METHOD("get_lift"),
-		&godot::MainFollowCamera::GetLift
+		&MainFollowCamera::GetLift
 	);
-
-	/*
-	godot::ClassDB::bind_method(
-		godot::D_METHOD("_input"),
-		&MainFollowCamera::_input
-	);
-
-	godot::ClassDB::bind_method(
-		godot::D_METHOD("_physics_process"),
-		&MainFollowCamera::_physics_process
-	);
-	*/
 }
 
-void godot::MainFollowCamera::_ready()
+void MainFollowCamera::_ready()
 {
-	SimulatorCore::instancePtr->GenerateWorld(
-		this->get_node<godot::Node2D>("/root/MainWorld")
-	);
+	if (godot::Engine::get_singleton()->is_editor_hint() == false)
+	{
+		godot::UtilityFunctions::print("Ready.");
 
-	this->aircraftSpritePtr = this->get_node<godot::Sprite2D>("AircraftSprite");
+		SimulatorCore::instancePtr = new SimulatorCore();
 
-	this->aircraftShadowPtr = this->get_node<godot::Sprite2D>("AircraftShadowSprite");
+		/*
+		this->aircraftSpritePtr = this->get_node<godot::Sprite2D>("AircraftSprite");
 
-	this->hudVBoxContainerPtr = this->get_node<godot::VBoxContainer>(
-		"HUDCanvasLayer/HUDVBoxContainer"
-	);
+		this->aircraftShadowPtr = this->get_node<godot::Sprite2D>("AircraftShadowSprite");
 
-	this->airspeedLabelPtr = this->hudVBoxContainerPtr->get_node<godot::Label>(
-		"AirspeedLabel"
-	);
+		this->hudVBoxContainerPtr = this->get_node<godot::VBoxContainer>(
+			"HUDCanvasLayer/HUDVBoxContainer"
+		);
 
-	this->altitudeLabelPtr = this->hudVBoxContainerPtr->get_node<godot::Label>(
-		"AltitudeLabel"
-	);
+		this->airspeedLabelPtr = this->hudVBoxContainerPtr->get_node<godot::Label>(
+			"AirspeedLabel"
+		);
 
-	this->gpsCheckButtonPtr = this->get_node<godot::CheckButton>(
-		"HUDCanvasLayer/TopRightVBoxContainer/GPSCheckButton"
-	);
+		this->altitudeLabelPtr = this->hudVBoxContainerPtr->get_node<godot::Label>(
+			"AltitudeLabel"
+		);
 
-	this->gpsCheckButtonPtr->connect(
-		"toggled",
-		godot::Callable(
-			this,
-			"OnGPSCheckButtonToggled"
-		)
-	);
+		this->gpsCheckButtonPtr = this->get_node<godot::CheckButton>(
+			"HUDCanvasLayer/TopRightVBoxContainer/GPSCheckButton"
+		);
 
-	this->UpdateAirspeedLabel();
+		this->gpsCheckButtonPtr->connect(
+			"toggled",
+			godot::Callable(
+				this,
+				"OnGPSCheckButtonToggled"
+			)
+		);
 
-	this->UpdateAltitudeLabel();
+		this->UpdateAirspeedLabel();
 
-	this->UpdateHUDBasedOnCameraZoom();
+		this->UpdateAltitudeLabel();
+
+		this->UpdateHUDBasedOnCameraZoom();
+		*/
+	}
+	else
+	{
+		this->set_process_internal(false);
+
+		this->set_physics_process_internal(false);
+	}
 }
 
-void godot::MainFollowCamera::_input(godot::InputEvent* inputEventPtr)
+void MainFollowCamera::_input(godot::InputEvent* inputEventPtr)
 {
 	if (inputEventPtr->is_class("InputEventKey") == true)
 	{
@@ -201,8 +199,11 @@ void godot::MainFollowCamera::_input(godot::InputEvent* inputEventPtr)
 	}
 }
 
-void godot::MainFollowCamera::_physics_process(float delta)
+void MainFollowCamera::_physics_process(float delta)
 {
+	godot::UtilityFunctions::print("Calling _physics_process.");
+
+	/*
 	if (this->keyToPressedStatusMap[godot::KEY_PAGEUP] == true)
 	{
 		this->velocity += this->acceleration;
@@ -263,4 +264,10 @@ void godot::MainFollowCamera::_physics_process(float delta)
 			this->aircraftSpritePtr->get_rotation()
 		)
 	);
+	*/
+}
+
+void MainFollowCamera::_process(float delta)
+{
+
 }

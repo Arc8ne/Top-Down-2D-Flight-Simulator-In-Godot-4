@@ -4,13 +4,13 @@
 
 #include <godot_cpp/core/class_db.hpp>
 
-/*
 #include "MainWorld.hpp"
 
 #include "Aircraft.hpp"
 
 #include "MainFollowCamera.hpp"
-*/
+
+#include "LoadingBar.hpp"
 
 void initialize_main_module(godot::ModuleInitializationLevel p_level);
 
