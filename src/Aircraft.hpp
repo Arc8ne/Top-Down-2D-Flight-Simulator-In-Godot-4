@@ -1,3 +1,5 @@
+#pragma once
+
 #include <godot_cpp/variant/string.hpp>
 
 #include <godot_cpp/variant/vector2.hpp>

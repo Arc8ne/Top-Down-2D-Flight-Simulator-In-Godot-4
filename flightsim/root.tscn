@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://cag30to7argpv"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Aircraft" type="Aircraft" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="Aircraft"]
